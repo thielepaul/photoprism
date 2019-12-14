@@ -7,6 +7,15 @@ class Viewer {
         this.el = null;
     }
 
+    setPhotos(photos) {
+        if (!Array.isArray(photos) || photos.length === 0) {
+            console.log("Array passed to gallery was empty:", photos);
+            return;
+        }
+
+        this.photos = photos;
+    }
+
     photosWithSizes() {
         return this.photos.map(this.createPhotoSizes);
     }

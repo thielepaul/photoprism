@@ -77,9 +77,8 @@
                     var lastAddedId = selection[selection.length - 1];
                     var rangeStart = this.photos.findIndex((photo) => photo.getId() == lastAddedId);
                     var rangeEnd = this.photos.indexOf(photo);
-                    console.log(Math.min(rangeStart, rangeEnd), Math.max(rangeStart, rangeEnd))
-                    for (var i=Math.min(rangeStart, rangeEnd); i<=Math.max(rangeStart, rangeEnd); i++) {
-                        this.$clipboard.addId(this.photos[i].getId());
+                    for (var photo of this.photos.slice(Math.min(rangeStart, rangeEnd), Math.max(rangeStart, rangeEnd) + 1)) {
+                        this.$clipboard.add(photo);
                     }
                 } else {
                     this.$clipboard.addId(photo.getId());

@@ -25,6 +25,18 @@
                         fab
                         dark
                         small
+                        title="Select Range"
+                        color="accent"
+                        @click.stop="selectRange()"
+                        :disabled="selection.length === 0"
+                        class="p-photo-clipboard-select-range"
+                >
+                    <v-icon>select_all</v-icon>
+                </v-btn>
+                <v-btn
+                        fab
+                        dark
+                        small
                         title="Private"
                         color="deep-purple lighten-2"
                         @click.stop="batchPrivate()"
@@ -150,6 +162,20 @@
         methods: {
             clearClipboard() {
                 this.$clipboard.clear();
+                this.expanded = false;
+            },
+            selectRange() {
+                var selection = this.$clipboard.getIds();
+                if (selection.length >= 2) {
+                    var lastAddedId = selection[selection.length - 1];
+                    var secondLastAddedId = selection[selection.length - 2];
+                    var rangeStart = this.$viewer.photos.findIndex((photo) => photo.getId() == lastAddedId);
+                    var rangeEnd = this.$viewer.photos.findIndex((photo) => photo.getId() == secondLastAddedId);
+                    var photosToBeAdded = this.$viewer.photos.slice(Math.min(rangeStart, rangeEnd), Math.max(rangeStart, rangeEnd) + 1);
+                    for (var photo of photosToBeAdded) {
+                        this.$clipboard.add(photo);
+                    }
+                }
                 this.expanded = false;
             },
             batchPrivate() {

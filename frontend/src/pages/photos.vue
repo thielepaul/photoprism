@@ -131,6 +131,7 @@
 
                 Photo.search(params).then(response => {
                     this.results = this.results.concat(response.models);
+                    this.$viewer.setPhotos(this.results);
 
                     this.scrollDisabled = (response.models.length < this.pageSize);
 
@@ -193,6 +194,7 @@
 
                 Photo.search(params).then(response => {
                     this.results = response.models;
+                    this.$viewer.setPhotos(this.results);
 
                     this.scrollDisabled = (response.models.length < this.pageSize);
 
