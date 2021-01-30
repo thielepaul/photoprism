@@ -46,7 +46,7 @@ func UpdatePhotoCounts() error {
 	// log.Info("index: updating photo counts")
 
 	if err := Db().Table("places").
-		UpdateColumn("photo_count", gorm.Expr("(SELECT COUNT(*) FROM photos p "+
+		Update("photo_count", gorm.Expr("(SELECT COUNT(*) FROM photos p "+
 			"WHERE places.id = p.place_id "+
 			"AND p.photo_quality >= 0 "+
 			"AND p.photo_private = 0 "+
@@ -80,7 +80,7 @@ func UpdatePhotoCounts() error {
 
 	if err := Db().
 		Table("labels").
-		UpdateColumn("photo_count",
+		Update("photo_count",
 			gorm.Expr("(SELECT photo_count FROM label_counts WHERE label_id = labels.id)")).Error; err != nil {
 		log.Warn(err)
 	} */
@@ -88,7 +88,7 @@ func UpdatePhotoCounts() error {
 	if IsDialect(MySQL) {
 		if err := Db().
 			Table("labels").
-			UpdateColumn("photo_count",
+			Update("photo_count",
 				gorm.Expr(`(SELECT photo_count FROM (
 			SELECT label_id, SUM(photo_count) AS photo_count FROM (
 			(SELECT l.id AS label_id, COUNT(*) AS photo_count FROM labels l
@@ -113,7 +113,7 @@ func UpdatePhotoCounts() error {
 	} else if IsDialect(SQLite) {
 		if err := Db().
 			Table("labels").
-			UpdateColumn("photo_count",
+			Update("photo_count",
 				gorm.Expr(`(SELECT photo_count FROM (SELECT label_id, SUM(photo_count) AS photo_count FROM (
 				SELECT l.id AS label_id, COUNT(*) AS photo_count FROM labels l
 					JOIN photos_labels pl ON pl.label_id = l.id

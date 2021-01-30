@@ -123,13 +123,13 @@ func SetPhotoPrimary(photoUID, fileUID string) error {
 		return fmt.Errorf("file uid is missing")
 	}
 
-	Db().Model(entity.File{}).Where("photo_uid = ? AND file_uid <> ?", photoUID, fileUID).UpdateColumn("file_primary", 0)
-	return Db().Model(entity.File{}).Where("photo_uid = ? AND file_uid = ?", photoUID, fileUID).UpdateColumn("file_primary", 1).Error
+	Db().Model(entity.File{}).Where("photo_uid = ? AND file_uid <> ?", photoUID, fileUID).Update("file_primary", 0)
+	return Db().Model(entity.File{}).Where("photo_uid = ? AND file_uid = ?", photoUID, fileUID).Update("file_primary", 1).Error
 }
 
 // SetFileError updates the file error column.
 func SetFileError(fileUID, errorString string) {
-	if err := Db().Model(entity.File{}).Where("file_uid = ?", fileUID).UpdateColumn("file_error", errorString).Error; err != nil {
+	if err := Db().Model(entity.File{}).Where("file_uid = ?", fileUID).Update("file_error", errorString).Error; err != nil {
 		log.Errorf("query: %s", err.Error())
 	}
 }

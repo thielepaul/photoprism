@@ -1036,7 +1036,7 @@ func (m *Photo) AllFiles() (files Files) {
 func (m *Photo) Archive() error {
 	deletedAt := Timestamp()
 
-	if err := Db().Model(&PhotoAlbum{}).Where("photo_uid = ?", m.PhotoUID).UpdateColumn("hidden", true).Error; err != nil {
+	if err := Db().Model(&PhotoAlbum{}).Where("photo_uid = ?", m.PhotoUID).Update("hidden", true).Error; err != nil {
 		return err
 	} else if err := m.Update("deleted_at", deletedAt); err != nil {
 		return err
@@ -1087,12 +1087,12 @@ func (m *Photo) NoDescription() bool {
 
 // Updates a column in the database.
 func (m *Photo) Update(attr string, value interface{}) error {
-	return UnscopedDb().Model(m).UpdateColumn(attr, value).Error
+	return UnscopedDb().Model(m).Update(attr, value).Error
 }
 
 // Updates multiple columns in the database.
 func (m *Photo) Updates(values interface{}) error {
-	return UnscopedDb().Model(m).UpdateColumns(values).Error
+	return UnscopedDb().Model(m).Updates(values).Error
 }
 
 // SetFavorite updates the favorite status of a photo.
@@ -1182,9 +1182,9 @@ func (m *Photo) SetPrimary(fileUID string) error {
 		return fmt.Errorf("file uid is empty")
 	}
 
-	Db().Model(File{}).Where("photo_uid = ? AND file_uid <> ?", m.PhotoUID, fileUID).UpdateColumn("file_primary", 0)
+	Db().Model(File{}).Where("photo_uid = ? AND file_uid <> ?", m.PhotoUID, fileUID).Update("file_primary", 0)
 
-	if err := Db().Model(File{}).Where("photo_uid = ? AND file_uid = ?", m.PhotoUID, fileUID).UpdateColumn("file_primary", 1).Error; err != nil {
+	if err := Db().Model(File{}).Where("photo_uid = ? AND file_uid = ?", m.PhotoUID, fileUID).Update("file_primary", 1).Error; err != nil {
 		return err
 	} else if m.PhotoQuality < 0 {
 		m.PhotoQuality = 0
